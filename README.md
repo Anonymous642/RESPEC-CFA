@@ -1,18 +1,18 @@
-# ReSpec-CFA
+# RESPEC-CFA
 
-ReSpec-CFA is a Control Flow Attestation (CFA) extension that enables speculative optimization of generated Control Flow logs (CFLogs) based on two new application-specific characteristics. First, ReSpec-CFA enables optimization on the localilty of branching instructions. A trusted Verifier (Vrf) can speculate on and configure a remote Prover (Prv) with a memory address prefix length. ReSpec-CFA uses this length to calculate the prefix of each control flow transfer added to CFLog and log shared prefixes only once. Second, ReSpec-CFA allows for optimizations based on Huffman codes. Vrf can generate a Huffman encoding table based on prior executions\CFLogs and send the table to Prv. ReSpec-CFA then uses this table to encode each CFLog entry at runtime. These speculation strategies achieve up to 90.1% CFLog reductions alone. However, when coupled with prior work like [SpecCFA](https://github.com/RIT-CHAOS-SEC/SpecCFA/), ReSpec-CFA achieves further reductions up to 99.7% of CFLog's original size.
+RESPEC-CFA is a Control Flow Attestation (CFA) extension that enables speculative optimization of generated Control Flow logs (CFLogs) based on two new application-specific characteristics. First, RESPEC-CFA enables optimization on the localilty of branching instructions. A trusted Verifier (Vrf) can speculate on and configure a remote Prover (Prv) with a memory address prefix length. RESPEC-CFA uses this length to calculate the prefix of each control flow transfer added to CFLog and log shared prefixes only once. Second, RESPEC-CFA allows for optimizations based on Huffman codes. Vrf can generate a Huffman encoding table based on prior executions\CFLogs and send the table to Prv. RESPEC-CFA then uses this table to encode each CFLog entry at runtime. These speculation strategies achieve up to 90.1% CFLog reductions alone. However, when coupled with prior work like [SpecCFA](https://github.com/RIT-CHAOS-SEC/SpecCFA/), RESPEC-CFA achieves further reductions up to 99.7% of CFLog's original size.
 
-A Map of ReSpec's directory structure can be found [here](#respec-directory-structure)
+A Map of RESPEC's directory structure can be found [here](#respec-directory-structure)
 
-## ReSpec-CFA Hardware/Dependencies
+## RESPEC-CFA Hardware/Dependencies
 
-ReSpec-CFA was developed and tested on an Ubuntu 20.04.2 device with a 3.7 GHz Intel Xeon W-2145 CPU.
+RESPEC-CFA was developed and tested on an Ubuntu 20.04.2 device with a 3.7 GHz Intel Xeon W-2145 CPU.
 
-We implement ReSpec's prototype using the STM32CubeIDE and deploy our prototype on a NUCLEO-L552ZE-Q development board featuring an STM32L552ZE MCU with support for ARM TrustZone-M. This MCU operates at 110 MHz and uses a UART-to-USB interface with a baud rate of 38400 for communication. 
+We implement RESPEC's prototype using the STM32CubeIDE and deploy our prototype on a NUCLEO-L552ZE-Q development board featuring an STM32L552ZE MCU with support for ARM TrustZone-M. This MCU operates at 110 MHz and uses a UART-to-USB interface with a baud rate of 38400 for communication. 
 
 **Note:** We used STM32CubeIDE 1.15.0 for our development. While other versions of the IDE should work, we experienced communication issues with the development board when using other CubeIDE versions (1.16.1 specifically). Due to this, we recommend using version 1.15.0 when running this prototype.
 
-Using ReSpec-CFA's prototype relies on several bash and python scripts. The bash scripts require the `gcc-arm-none-eabi` toolchain to be installed. This can be done using:
+Using RESPEC-CFA's prototype relies on several bash and python scripts. The bash scripts require the `gcc-arm-none-eabi` toolchain to be installed. This can be done using:
 
     apt-get install gcc-arm-none-eabi
 
@@ -22,9 +22,9 @@ Or by downloading it directly from [ARM](https://developer.arm.com/downloads/-/g
 
 With the dependencies installed, you can begin setting up your project.
 
-## Importing ReSpec-CFA's STM32 Project
+## Importing RESPEC-CFA's STM32 Project
 
-To begin using ReSPec-CFA, you will need to import the project to the CubeIDE. For this:
+To begin using RESPEC-CFA, you will need to import the project to the CubeIDE. For this:
 
 0. Clone this repository (if you haven't already)
 1. On the left side of the screen is a window labeled "Project Explorer". In this window click "import projects...". If the option is not present you can also click "File -> Import" at the top of the screen. In the resulting dialog box ensure "Existing Projects into Workspace" is highlighted and click "Next >"
@@ -44,7 +44,7 @@ To begin using ReSPec-CFA, you will need to import the project to the CubeIDE. F
 
 ## Selecting a Test Application
 
-We evaluate ReSpec-CFA against 6 real-world MCU applications: a Geiger counter (geiger), GPS sensor (GPS), mouse (mouse), syringe pump (syringe), temperature sensor (temp), and an ultrasonic sensor (ultra). 
+We evaluate RESPEC-CFA against 6 real-world MCU applications: a Geiger counter (geiger), GPS sensor (GPS), mouse (mouse), syringe pump (syringe), temperature sensor (temp), and an ultrasonic sensor (ultra). 
 
 To select an application for testing open `vrf/application.h` and the edit `#define APP_SEL` statement on line 12 with the desired application. The appropriate value for each application is listed above the defines statement.
 
@@ -58,9 +58,9 @@ This will configure the application with the necessary CFA instrumentation to th
 
 Once compiled, in STM32CubeIDE right click both SpecCFA-TZ_NonSecure and SpecCFA-TZ_Secure and select "Clean Project". 
 
-## Configuring ReSpec-CFA
+## Configuring RESPEC-CFA
 
-ReSpec-CFA's prototype supports three speculation strategies: Prefix, Huffman, and SpecCFA's subpath speculation. By default, ReSpec-CFA is configured for the temperature sensor with all three strategies enabled and support for 8 subpaths. We provide all subpath definitions and Huffman tables used during our evaluation in the `cflogs` directory. Whether using provided test values or custom definitions, ReSpec-CFA must be reconfigured appropriately for each test.
+RESPEC-CFA's prototype supports three speculation strategies: Prefix, Huffman, and SpecCFA's subpath speculation. By default, RESPEC-CFA is configured for the temperature sensor with all three strategies enabled and support for 8 subpaths. We provide all subpath definitions and Huffman tables used during our evaluation in the `cflogs` directory. Whether using provided test values or custom definitions, RESPEC-CFA must be reconfigured appropriately for each test.
 
 ### Enabling Speculation
 
@@ -70,7 +70,7 @@ To enable/disable any of the speculation strategies you must edit `prv/Secure/Co
 	size = prefix_handler(value, &report_secure, to_log);
 	size = huffman(&report_secure, to_log, size, spec);
 
-These lines call the SpecCFA subpath, prefix, and Huffman speculation engines respectively. To enable/disable any strategy simply comment/uncomment its respective call. ReSpec-CFA is designed to work with any combination of optimizations enabled and disabling all three optimizations will result in the unoptimized CFA baseline.
+These lines call the SpecCFA subpath, prefix, and Huffman speculation engines respectively. To enable/disable any strategy simply comment/uncomment its respective call. RESPEC-CFA is designed to work with any combination of optimizations enabled and disabling all three optimizations will result in the unoptimized CFA baseline.
 
 ### Prefix.c
 
@@ -98,7 +98,7 @@ The script is only preloaded with two symbol alphabets: "nibble" and "byte". The
 
 The code for SpecCFA's subpath speculation is found in `prv/Secure/Core/Src/speculation.c` and `prv/Secure/Core/Inc/speculation.h`. To configure SpecCFA's subpaths simply update the subpath definitions in `speculation.c` (lines 18-68) with the desired subpaths. Similarly, you can update the `TOTAL_BLOCKS` value at line 13 to control how many subpaths are currently enabled.
 
-Similar to the Huffman tables, the subpath definitions used to evaluate ReSpec-CFA can be found in the `cflogs/app/spec/spec.txt` file where `app` refers to the desired application's subdirectory. Further custom path definitions can be generated by running the `cflogs/path_selection.py` script. For more information on how to use `path_selection.py` please refer to SpecCFA's [opensource repository](https://github.com/RIT-CHAOS-SEC/SpecCFA?tab=readme-ov-file#cflog-analysis) or run:
+Similar to the Huffman tables, the subpath definitions used to evaluate RESPEC-CFA can be found in the `cflogs/app/spec/spec.txt` file where `app` refers to the desired application's subdirectory. Further custom path definitions can be generated by running the `cflogs/path_selection.py` script. For more information on how to use `path_selection.py` please refer to SpecCFA's [opensource repository](https://github.com/RIT-CHAOS-SEC/SpecCFA?tab=readme-ov-file#cflog-analysis) or run:
 
     python path_selection.py -h
 
@@ -114,7 +114,7 @@ To update the symbol you will need to change the `SPEC_ID_SYMBOL` (line 27) and 
 
 ### Building the Application
 
-Once you have configured ReSpec-CFA, right click SpecCFA-TZ_NonSecure and SpecCFA-TZ_Secure in Project_Explorer and click "Build Project"
+Once you have configured RESPEC-CFA, right click SpecCFA-TZ_NonSecure and SpecCFA-TZ_Secure in Project_Explorer and click "Build Project"
 
 
 ## Running the Application
@@ -148,16 +148,16 @@ For more help on how to use the script run:
 
 ## cflogs Directory
 
-All test configurations and resulting CFLogs from our evaluation of ReSpec-CFA are provided in the `cflogs` directory. Test files and results are divided into subdirectories based on their test application. Each application's subdirectory is further split by the speculation strategies enabled for the test. These configurations are as follows:
+All test configurations and resulting CFLogs from our evaluation of RESPEC-CFA are provided in the `cflogs` directory. Test files and results are divided into subdirectories based on their test application. Each application's subdirectory is further split by the speculation strategies enabled for the test. These configurations are as follows:
 
 * baseline - Resulting CFLogs with no speculation strategies enabled
 * combos - Tests with multiple speculation strategies enabled
-  * all - Tests where SpecCFA's subpath speculation and ReSpec-CFA's prefix and Huffman speculation strategies are all enabled
+  * all - Tests where SpecCFA's subpath speculation and RESPEC-CFA's prefix and Huffman speculation strategies are all enabled
   * prefix_huff - Tests where both the prefix and Huffman speculation strategies are enabled
-  * spec_huff - Tests where both the SpecCFA's subpath and ReSpec-CFA's Huffman speculation strategies are enabled 
-  * spec_prefix - Tests where both the SpecCFA's subpath and ReSpec-CFA's prefix speculation strategies are enabled 
-* huffman - Tests where only ReSpec-CFA's Huffman speculation is enabled 
-* prefix - Tests where only ReSpec-CFA's prefix speculation is enabled 
+  * spec_huff - Tests where both the SpecCFA's subpath and RESPEC-CFA's Huffman speculation strategies are enabled 
+  * spec_prefix - Tests where both the SpecCFA's subpath and RESPEC-CFA's prefix speculation strategies are enabled 
+* huffman - Tests where only RESPEC-CFA's Huffman speculation is enabled 
+* prefix - Tests where only RESPEC-CFA's prefix speculation is enabled 
 * spec - Tests where only SpecCFA's subpath speculation is enabled 
 
 All test directories where SpecCFA is enabled (all, spec_huff, spec_prefix, and spec) are further split by how many subpaths are enabled (1-8 except ultra which has a max of 6 subpaths)
@@ -194,7 +194,7 @@ This script offers several strategies and configurable criteria for subpath sele
 
 
 
-### ReSpec Directory Structure
+### RESPEC Directory Structure
 
 	├── cflogs
 	│   ├── geiger
